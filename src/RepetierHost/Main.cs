@@ -156,7 +156,7 @@ namespace RepetierHost
         }
         [System.Runtime.InteropServices.DllImport("libc")]
         static extern int uname(IntPtr buf);
-        public Main()
+        public Main(string[] args)
         {
             executeHostCall = new executeHostCommandDelegate(this.executeHostCommand);
             repetierKey = Custom.BaseKey; // Registry.CurrentUser.CreateSubKey("SOFTWARE\\Repetier");
@@ -337,6 +337,23 @@ namespace RepetierHost
             this.AllowDrop = true;
             this.DragEnter += new DragEventHandler(Form1_DragEnter);
             this.DragDrop += new DragEventHandler(Form1_DragDrop);
+
+            //everything done.  Now look at command line
+            ProcessCommandLine(args);
+
+
+        }
+
+        void ProcessCommandLine(string[] args)
+        {
+            if (args.Length < 1) return;
+             
+            //for now, just check the last arg and load it. Could add other inputs/commands later.
+            string file = args[args.Length-1];
+            if(File.Exists(file))
+            {
+                LoadGCodeOrSTL(file);
+            }
         }
         void Form1_DragEnter(object sender, DragEventArgs e)
         {
